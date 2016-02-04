@@ -28,7 +28,7 @@ public class Runner {
         DownloaderService.PLAYERS.sort(AtpTennisPlayer::compareTo);
 //        DownloaderService.PLAYERS.stream().forEach(System.out::println);
         System.out.println("Quantity of got players info: " + DownloaderService.PLAYERS.size() + ". Spent time: " + allTime + " secs");
-//        SERVICE.saveInfoToExcel();
+        SERVICE.saveInfoToExcel();
     }
 
 

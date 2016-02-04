@@ -1,6 +1,7 @@
+package samples.java8;
+
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.function.Function;
@@ -58,15 +59,15 @@ public class Java8Featurs {
 //                forEach(i -> sum[0] += i);
 //                forEach(i -> sum[0].set(sum[0].addAndGet(i)));
         reduce((x1, x2) -> x1 + x2);
-//        System.out.println(sum.isPresent() ? sum.get() : "Exception in thread \"main\" java.util.NoSuchElementException: No value present\n" +
-//                "\tat java.util.Optional.get(Optional.java:135)\n" +
-//                "\tat Main.streamExample(Java8Featurs.java:59)\n" +
-//                "\tat Main.main(Java8Featurs.java:17)\n" +
+//        System.out.println(sum.isPresent() ? sum.get() : "Exception in thread \"main\" java8.util.NoSuchElementException: No value present\n" +
+//                "\tat java8.util.Optional.get(Optional.java8:135)\n" +
+//                "\tat Main.streamExample(samples.java8.Java8Featurs.java8:59)\n" +
+//                "\tat Main.main(samples.java8.Java8Featurs.java8:17)\n" +
 //                "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
-//                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
-//                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
-//                "\tat java.lang.reflect.Method.invoke(Method.java:497)\n" +
-//                "\tat com.intellij.rt.execution.application.AppMain.main(AppMain.java:140)");
+//                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java8:62)\n" +
+//                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java8:43)\n" +
+//                "\tat java8.lang.reflect.Method.invoke(Method.java8:497)\n" +
+//                "\tat com.intellij.rt.execution.application.AppMain.main(AppMain.java8:140)");
 //        System.out.println(sum[0]);
 //        System.out.println(integer.get());
 //        5)

@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 public class AtpPlayerStatsDownloaderServiceImpl implements DownloaderService {
     private static final String ATP_WORLD_TOUR_SITE_URL = "http://www.atpworldtour.com";
     private static final String RANKINGS_SINGLES_PAGE_PATH = "/en/rankings/singles";
-    private static final String OUTPUT_FILE_NAME = "SingleAtpTop100RankingPage.xml";
-    private static final String EXCEL_FILE_PATH = "AtpPlayerStatistics.xlsx";
+    private static final String OUTPUT_FILE_NAME = "src/main/resources/SingleAtpTop100RankingPage.xml";
+    private static final String EXCEL_FILE_PATH = "src/main/resources/AtpPlayerStatistics.xlsx";
     private static final int TABLE_DATA_OFFSET = 3;
     private static final short DEFAULT_ROW_HEIGHT = 15;
     public static final short DEFAULT_COLUMN_WIDTH = 6;
