@@ -1,36 +1,38 @@
 package samples.tennis;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Runner {
-    private static final DownloaderService SERVICE = new AtpPlayerStatsDownloaderServiceImpl();
+    private PlayersInfoHolder holder;
+    private DownloaderService downloaderService;
+    private SaverService saverService;
 
     public static void main(String[] args) throws Exception {
-        getPlayersInfo();
-        List<Integer> values = DownloaderService.PLAYERS.stream()
-                .map((e) -> e.getReturnRecord().getGamesWon().getValue())
-                .collect(Collectors.toList());
-        NormalDistributionCalculator.splitByGroups(values, 7).stream().forEach((e) -> {
-            AtomicInteger sum = new AtomicInteger(0);
-            e.getValues().values().parallelStream().forEach((v) -> sum.set(sum.get() + v));
-            System.out.println(e + " players quantity is " + sum);
-        });
-
+        Runner runner = new Runner();
+        runner.injectBeans();
+        runner.getPlayersInfo();
     }
 
-    private static void getPlayersInfo() throws Exception {
+    private void injectBeans() {
+        ConfigContext configContext = new ConfigContextImpl();
+        DataSource<AtpTennisPlayer> dataSource = new PlayersInfoHolder();
+        configContext.setDataSource(dataSource);
+        downloaderService = new AtpPlayerStatsDownloaderServiceImpl();
+        downloaderService.configure(configContext);
+        saverService = new AtpPlayerStatsSaverServiceImpl();
+        saverService.configure(configContext);
+    }
+
+    private void getPlayersInfo() throws Exception {
         long start = System.currentTimeMillis();
-        SERVICE.doIt();
+        downloaderService.downloadStats();
         long end = System.currentTimeMillis();
-        double allTime = (end - start) / 1000.;
-        DownloaderService.PLAYERS.sort(AtpTennisPlayer::compareTo);
-//        DownloaderService.PLAYERS.stream().forEach(System.out::println);
-        System.out.println("Quantity of got players info: " + DownloaderService.PLAYERS.size() + ". Spent time: " + allTime + " secs");
-        SERVICE.saveInfoToExcel();
+        double spentTime = (end - start) / 1000.;
+        System.out.println("Spent time: " + spentTime);
+        saverService.saveInfo();
     }
-
 
 //    NormalDistributionCalculator.countValues(
 //            DownloaderService.PLAYERS.stream()
@@ -41,4 +43,9 @@ public class Runner {
 //            countValues.entrySet().stream().forEach(System.out::println);
 //        }
 //    });
+
+//    infoHolder.PLAYERS.sort(AtpTennisPlayer::compareTo);
+//        DownloaderService.PLAYERS.stream().forEach(System.out::println);
+//    System.out.println("Quantity of got players info: " + infoHolder.PLAYERS.size() + ". Spent time: " + allTime + " secs");
+//    downloaderService.saveInfo();
 }
