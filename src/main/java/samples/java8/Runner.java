@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Java8Featurs {
+public class Runner {
     private int count;
 
     public static void main(String[] args) {
-//        new Main().lambdaExample();
-        new Java8Featurs().streamExample();
-//        new Main().dateExample();
+//        new Runner().lambdaExample();
+        new Runner().streamExample();
+//        new Runner().dateExample();
     }
 
     public void java8() {
@@ -61,13 +61,13 @@ public class Java8Featurs {
         reduce((x1, x2) -> x1 + x2);
 //        System.out.println(sum.isPresent() ? sum.get() : "Exception in thread \"main\" java8.util.NoSuchElementException: No value present\n" +
 //                "\tat java8.util.Optional.get(Optional.java8:135)\n" +
-//                "\tat Main.streamExample(samples.java8.Java8Featurs.java8:59)\n" +
-//                "\tat Main.main(samples.java8.Java8Featurs.java8:17)\n" +
+//                "\tat Runner.streamExample(samples.java8.Java8Featurs.java8:59)\n" +
+//                "\tat Runner.main(samples.java8.Java8Featurs.java8:17)\n" +
 //                "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
 //                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java8:62)\n" +
 //                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java8:43)\n" +
 //                "\tat java8.lang.reflect.Method.invoke(Method.java8:497)\n" +
-//                "\tat com.intellij.rt.execution.application.AppMain.main(AppMain.java8:140)");
+//                "\tat com.intellij.rt.execution.application.AppRunner.main(AppRunner.java8:140)");
 //        System.out.println(sum[0]);
 //        System.out.println(integer.get());
 //        5)

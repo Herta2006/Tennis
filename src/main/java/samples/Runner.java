@@ -1,29 +1,24 @@
 package samples;
 
-import java.util.*;
+import samples.algorithms.Sorter;
+
+import java.util.Random;
 
 public class Runner {
-    public static void main(String[] args) {
-        List<Integer> list = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < 100_000_000; i++) {
-            list.add(random.nextInt(10_000));
+    public static void main(String[] args) throws InterruptedException {
+        int quantity = 8_000_000;
+        byte[] arr = new byte[quantity];
+        Random generator = new Random();
+        for (int i = 0; i < quantity; i++) {
+            arr[i] = (byte)generator.nextInt(Byte.MAX_VALUE);
         }
-        Set<Integer> set = new HashSet<>();
-
-//        set.contains(x) - O(1)
-//        for - O(n)
-//        => O(n)
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < list.size(); i++) {
-            int value = list.get(i);
-            if (set.contains(value)) {
-                list.set(i, 0);
-            }
-            set.add(value);
-        }
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
-
+//        System.out.println(Arrays.toString(arr));
+        System.out.println("Sorted? - " + Sorter.isSorted(arr));
+        long start = System.nanoTime();
+        Sorter.recursiveMergeSort(arr, 3);
+        long end = System.nanoTime();
+        System.out.println("Sorted? - " + Sorter.isSorted(arr));
+//        System.out.println(Arrays.toString(arr));
+        System.out.println("Time spent:" + ((end - start) / 1_000_000) + " ms");
     }
 }
