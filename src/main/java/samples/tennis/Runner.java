@@ -44,7 +44,7 @@ public class Runner {
 //        }
 //    });
 
-//    infoHolder.PLAYERS.sort(AtpTennisPlayer::compareTo);
+//    infoHolder.PLAYERS.selectionSort(AtpTennisPlayer::compareTo);
 //        DownloaderService.PLAYERS.stream().forEach(System.out::println);
 //    System.out.println("Quantity of got players info: " + infoHolder.PLAYERS.size() + ". Spent time: " + allTime + " secs");
 //    downloaderService.saveInfo();

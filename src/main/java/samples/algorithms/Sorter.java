@@ -5,46 +5,264 @@ import java.util.Arrays;
 public class Sorter {
 
     public static boolean isSorted(byte[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            if (arr[i] > arr[i + 1]) {
-                return false;
-            }
-        }
+        for (int i = 0; i < arr.length - 1; i++) if (arr[i] > arr[i + 1]) return false;
         return true;
     }
 
-    public static void recursiveMergeSort(byte[] arr, int powerOf2OfThreadsAmount) {
-        Sorter.SortTask.setMaxRecursionDepth(powerOf2OfThreadsAmount);
-        Sorter.SortTask sortTask = new Sorter.SortTask(arr);
-        sortTask.start();
+    public static void bucketSort(byte... arr) {
+        byte maxValue = arr[0];
+        for (byte element : arr) if (element > maxValue) maxValue = element;
+        int[] bucket = new int[maxValue + 1];
+
+        for (byte anArr : arr) {
+            bucket[anArr]++;
+        }
+
+        int outPos = 0;
+        for (byte i = 0; i < bucket.length; i++) {
+            for (int j = 0; j < bucket[i]; j++) {
+                arr[outPos++] = i;
+            }
+        }
+    }
+
+    public static void heapSort(byte... arr) {
+        int i;
+        byte temp;
+        for (i = arr.length / 2 - 1; i >= 0; i--) {
+            shiftDown(arr, i, arr.length);
+        }
+        for (i = arr.length - 1; i >= 1; i--) {
+            temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+            shiftDown(arr, 0, i);
+        }
+    }
+
+    public static void quickSort(int powerOf2OfThreadsAmount, byte... arr) {
+        QuickSortTask.setMaxRecursionDepth(powerOf2OfThreadsAmount);
+        QuickSortTask quickSortTask = new QuickSortTask(arr, 0, arr.length - 1);
+        quickSortTask.start();
         try {
-            sortTask.join();
+            quickSortTask.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public static final class SortTask extends Thread implements Runnable {
+    public static void mergeSort(int powerOf2OfThreadsAmount, byte... arr) {
+        MergeSortTask.setMaxRecursionDepth(powerOf2OfThreadsAmount);
+        MergeSortTask mergeSortTask = new MergeSortTask(arr);
+        mergeSortTask.start();
+        try {
+            mergeSortTask.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertionSort(byte... arr) {
+//        long iterationCounter = 0;
+//        long innerIfIterationCounter = 0;
+        for (int currentIndex = 1; currentIndex < arr.length; currentIndex++) {
+            int indexToInsert = currentIndex;
+            byte currentElement = arr[currentIndex];
+            for (int innerCounter = currentIndex - 1; 0 <= innerCounter; innerCounter--) {
+//                iterationCounter++;
+                if (arr[innerCounter] > arr[currentIndex]) {
+//                    innerIfIterationCounter++;
+                    indexToInsert = innerCounter;
+                } else {
+                    break;
+                }
+            }
+            if (indexToInsert < currentIndex) {
+                System.arraycopy(arr, indexToInsert, arr, indexToInsert + 1, currentIndex - indexToInsert);
+                arr[indexToInsert] = currentElement;
+            }
+        }
+//        System.out.println("Iteration amount: " + iterationCounter);
+//        System.out.println("inside IF iteration amount: " + innerIfIterationCounter);
+    }
+
+    public static void selectionSort(byte... arr) {
+//        long iterationCounter = 0;
+//        long innerIfIterationCounter = 0;
+        for (int sortedAmount = 0; sortedAmount < arr.length; sortedAmount++) {
+            int indexOfMax = 0;
+            byte max = arr[indexOfMax];
+            int indexForMax = arr.length - 1 - sortedAmount;
+            for (int maxFinderCounter = 1; maxFinderCounter <= indexForMax; maxFinderCounter++) {
+//                iterationCounter++;
+                if (max < arr[maxFinderCounter]) {
+//                    innerIfIterationCounter++;
+                    indexOfMax = maxFinderCounter;
+                    max = arr[maxFinderCounter];
+                }
+            }
+            arr[indexOfMax] = arr[indexForMax];
+            arr[indexForMax] = max;
+        }
+//        System.out.println("Iteration amount: " + iterationCounter);
+//        System.out.println("inside IF iteration amount: " + innerIfIterationCounter);
+    }
+
+    public static void bubbleSort(byte... arr) {
+//        long iterationCounter = 0;
+//        long innerIfIterationCounter = 0;
+        for (int finishIndex = arr.length - 1; finishIndex > 1; finishIndex--) {
+            for (int i = 0; i < finishIndex; i++) {
+//                iterationCounter++;
+                if (arr[i] > arr[i + 1]) {
+//                    innerIfIterationCounter++;
+                    byte temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                }
+            }
+        }
+//        System.out.println("Iteration amount: " + iterationCounter);
+//        System.out.println("inside IF iteration amount: " + innerIfIterationCounter);
+    }
+
+    public static void bogoSort(byte[] arr) {
+        while (!isSorted(arr)) shuffle(arr);
+    }
+
+    private static void shuffle(byte[] arr) {
+        java.util.Random generator = new java.util.Random();
+        for (int i = 0; i < arr.length; i++) {
+            int swapPosition = generator.nextInt(arr.length);
+            swap(arr, i, swapPosition);
+        }
+    }
+
+    // and return the index j.
+    private static void shiftDown(byte[] a, int i, int j) {
+        boolean done = false;
+        int maxChild;
+        byte temp;
+        while ((i * 2 + 1 < j) && (!done)) {
+            if (i * 2 + 1 == j - 1)
+                maxChild = i * 2 + 1;
+            else if (a[i * 2 + 1] > a[i * 2 + 2])
+                maxChild = i * 2 + 1;
+            else
+                maxChild = i * 2 + 2;
+            if (a[i] < a[maxChild]) {
+                temp = a[i];
+                a[i] = a[maxChild];
+                a[maxChild] = temp;
+                i = maxChild;
+            } else {
+                done = true;
+            }
+        }
+    }
+
+    // split the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+
+
+    private static void swap(byte[] a, int i, int j) {
+        byte swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+    public static final class QuickSortTask extends Thread implements Runnable {
+        private final byte[] arr;
+        private int left;
+        private int right;
+        private static int recursionDepth;
+        private static int maxRecursionDepth;
+        private static long iterationCounter;
+        private static long innerIfIterationCounter;
+
+        public QuickSortTask(byte[] arr, int left, int right) {
+            this.arr = arr;
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public void run() {
+            quickSort(arr, left, right);
+//            System.out.println("Iteration amount: " + iterationCounter);
+//            System.out.println("inside IF iteration amount: " + innerIfIterationCounter);
+        }
+
+
+        private void quickSort(byte[] main, int left, int right) {
+            if (right <= left) return;
+            int j = split(main, left, right);
+            if (recursionDepth++ < maxRecursionDepth) {
+                try {
+                    QuickSortTask leftTask = new QuickSortTask(main, left, j - 1);
+                    QuickSortTask rightTask = new QuickSortTask(main, j + 1, right);
+                    leftTask.start();
+                    rightTask.start();
+                    leftTask.join();
+                    rightTask.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                quickSort(main, left, j - 1);
+                quickSort(main, j + 1, right);
+            }
+        }
+
+        public QuickSortTask(byte[] arr) {
+            this.arr = arr;
+        }
+
+        public byte[] getArr() {
+            return arr;
+        }
+
+        public static void setMaxRecursionDepth(int maxRecursionDepth) {
+            QuickSortTask.maxRecursionDepth = maxRecursionDepth;
+        }
+
+        private static int split(byte[] main, int left, int right) {
+            int i = left;
+            int j = right + 1;
+            byte pivot = main[left];
+            while (true) {
+                while (main[++i] < pivot) if (i == right) break;
+                while (pivot < main[--j]) if (j == left) break;
+                if (i >= j) break;
+                swap(main, i, j);
+            }
+            swap(main, left, j);
+            return j;
+        }
+    }
+
+    public static final class MergeSortTask extends Thread implements Runnable {
         private final byte[] arr;
         private static int recursionDepth;
         private static int maxRecursionDepth;
+        private static long iterationCounter;
+        private static long innerIfIterationCounter;
 
         @Override
         public void run() {
             recursiveMergeSort(arr);
+//            System.out.println("Iteration amount: " + iterationCounter);
+//            System.out.println("inside IF iteration amount: " + innerIfIterationCounter);
         }
 
         private void recursiveMergeSort(byte... main) {
-            if (main.length == 1) {
-                return;
-            }
-            int leftEnd = main.length / 2;
-            byte[] left = Arrays.copyOfRange(main, 0, leftEnd);
-            byte[] right = Arrays.copyOfRange(main, leftEnd, main.length);
+            if (main.length < 2) return;
+            int leftLength = main.length >>> 1;
+            byte[] left = Arrays.copyOfRange(main, 0, leftLength);
+            byte[] right = Arrays.copyOfRange(main, leftLength, main.length);
             if (recursionDepth++ < maxRecursionDepth) {
                 try {
-                    SortTask leftTask = new SortTask(left);
-                    SortTask rightTask = new SortTask(right);
+                    MergeSortTask leftTask = new MergeSortTask(left);
+                    MergeSortTask rightTask = new MergeSortTask(right);
                     leftTask.start();
                     rightTask.start();
                     leftTask.join();
@@ -60,9 +278,12 @@ public class Sorter {
             int rightCounter = 0;
             int mainCounter = 0;
             for (; leftCounter < left.length && rightCounter < right.length; mainCounter++) {
+//                iterationCounter++;
                 if (left[leftCounter] < right[rightCounter]) {
+//                    innerIfIterationCounter++;
                     main[mainCounter] = left[leftCounter++];
                 } else {
+//                    innerIfIterationCounter++;
                     main[mainCounter] = right[rightCounter++];
                 }
             }
@@ -73,7 +294,7 @@ public class Sorter {
             }
         }
 
-        public SortTask(byte[] arr) {
+        public MergeSortTask(byte[] arr) {
             this.arr = arr;
         }
 
@@ -82,7 +303,7 @@ public class Sorter {
         }
 
         public static void setMaxRecursionDepth(int maxRecursionDepth) {
-            SortTask.maxRecursionDepth = maxRecursionDepth;
+            MergeSortTask.maxRecursionDepth = maxRecursionDepth;
         }
     }
 
@@ -91,16 +312,16 @@ public class Sorter {
 }
 
 
-//    public static void mergeSort(int... arr) {
+//    public static void sort(int... arr) {
 //        if (arr.length == 1) {
 //            return;
 //        }
-//        int leftEnd = arr.length / 2;
+//        int leftEnd = arr.length >>> 1;
 //        int[] left = Arrays.copyOfRange(arr, 0, leftEnd);
 //        int[] right = Arrays.copyOfRange(arr, leftEnd, arr.length);
 //
-//        mergeSort(left);
-//        mergeSort(right);
+//        sort(left);
+//        sort(right);
 //        int leftCounter = 0;
 //        int rightCounter = 0;
 //        int mainCounter = 0;
@@ -161,7 +382,7 @@ public class Sorter {
 //            right = list1.get(0).right;
 //            list1.remove(0);
 //
-//            mid = (right + left) / 2;
+//            mid = (right + left) >>> 1;
 //
 //            if (left < right) {
 //                MergePosInfo info2 = new MergePosInfo();
@@ -186,12 +407,12 @@ public class Sorter {
 //
 //    }
 //
-//    static public void recursiveMergeSort(int[] numbers, int left, int right) {
+//    static public void sort(int[] numbers, int left, int right) {
 //        int mid;
 //        if (right > left) {
-//            mid = (right + left) / 2;
-//            recursiveMergeSort(numbers, left, mid);
-//            recursiveMergeSort(numbers, (mid + 1), right);
+//            mid = (right + left) >>> 1;
+//            sort(numbers, left, mid);
+//            sort(numbers, (mid + 1), right);
 //            merge(numbers, left, (mid + 1), right);
 //        }
 //    }
@@ -281,4 +502,79 @@ public class Sorter {
 //            System.arraycopy(tasks.iterator().next().getArr(), 0, main, 0, lastArrLength);
 //        }
 //        System.out.println("\n" + Arrays.toString(main));
+//    }
+
+
+//    public static void quickSort(byte... main) {
+//        if (main.length < 2) return;
+//        if (main.length == 2) {
+//            if (main[0] > main[1]) {
+//                byte temp;
+//                temp = main[0];
+//                main[0] = main[1];
+//                main[1] = temp;
+//            }
+//            return;
+//        }
+//        if (main.length == 3) {
+//            byte temp;
+//            if (main[0] > main[1]) {
+//                temp = main[0];
+//                main[0] = main[1];
+//                main[1] = temp;
+//            }
+//            if (main[1] > main[2]) {
+//                temp = main[1];
+//                main[1] = main[2];
+//                main[2] = temp;
+//            }
+//            if (main[0] > main[1]) {
+//                temp = main[0];
+//                main[0] = main[1];
+//                main[1] = temp;
+//            }
+//            return;
+//        }
+//
+//        byte min = main[0];
+//        byte max = main[main.length - 1];
+//        for (int i = 0; i < main.length - 1; i++) {
+//            if (main[i] < main[i + 1]) {
+//                min = main[i];
+//            } else {
+//                max = main[i];
+//            }
+//        }
+//        byte pivot = (byte) ((min + max) / 2);
+//        int lessEqualCounter = 0;
+//        for (byte element : main) {
+//            if (element <= pivot) {
+//                lessEqualCounter++;
+//            }
+//        }
+////        Random pivotIndexGenerator = new Random();
+////        int middle = main.length >>> 1;
+////        do {
+////            lessCounter = 0;
+////            pivot = main[pivotIndexGenerator.nextInt(main.length)];
+////            for (byte element : main) if (element < pivot) lessCounter++;
+////        }
+////        while (lessCounter <= middle - 0.25 * middle || middle + 0.25 < lessCounter);
+//
+//        byte[] left = new byte[lessEqualCounter];
+//        byte[] right = new byte[main.length - lessEqualCounter];
+//        int leftCounter = 0;
+//        int rightCounter = 0;
+//        for (byte element : main) {
+//            if (element <= pivot) {
+//                left[leftCounter++] = element;
+//            } else {
+//                right[rightCounter++] = element;
+//            }
+//        }
+//        quickSort(left);
+//        quickSort(right);
+//        System.arraycopy(left, 0, main, 0, leftCounter);
+//        System.arraycopy(right, 0, main, leftCounter, rightCounter);
+//
 //    }
