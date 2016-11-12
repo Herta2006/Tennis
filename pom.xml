@@ -39,7 +39,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>samples.tennis.Runner</mainClass>
+                                    <mainClass>tennis.Runner</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
